@@ -2,6 +2,7 @@
  * COEN 317 Project
  */
 
+import javax.swing.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -13,6 +14,7 @@ public class ChatClient {
     private Socket socket;
 
     private ClientGUI cg;
+
 
     // the server, the port and the username
     private String server, username;
@@ -104,6 +106,7 @@ public class ChatClient {
             display("Exception writing to server: " + e);
         }
     }
+
 
     /*
      * When something goes wrong
@@ -218,6 +221,8 @@ public class ChatClient {
      * if we have a GUI or simply System.out.println() it in console mode
      */
     class ListenFromServer extends Thread {
+        int flag = 0;
+        ArrayList<UserId> users = new ArrayList<>();
         @Override
         public void run() {
             while(true) {
@@ -225,8 +230,23 @@ public class ChatClient {
                     //String msg = (String) sInput.readObject();
                     ChatMessage cMsg = (ChatMessage) sInput.readObject();
                     // if console mode print the message and add back the prompt
-                    if(cMsg.getType() == ChatMessage.MESSAGE)
+                    if(cMsg.getType() == ChatMessage.MESSAGE) {
+                        if(flag == 1) {
+                            flag = 0;
+                            cg.updateList(users);
+                        }
                         display(cMsg.getMessage());
+                    }
+                    else if(cMsg.getType() == ChatMessage.WHOISIN)
+                    {
+                        if(flag == 0)
+                            users.clear();
+                        flag = 1;
+                        users.add(new UserId(cMsg.getUserID(), cMsg.getMessage()));
+
+
+                    }
+                        display(cMsg.getMessage()); //temporarily, later  this will add to friends list
                     /*
                     if(cg == null) {
                             System.out.println(msg);
