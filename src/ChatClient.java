@@ -243,10 +243,7 @@ public class ChatClient {
                             users.clear();
                         flag = 1;
                         users.add(new UserId(cMsg.getUserID(), cMsg.getMessage()));
-
-
                     }
-                        display(cMsg.getMessage()); //temporarily, later  this will add to friends list
                     /*
                     if(cg == null) {
                             System.out.println(msg);
