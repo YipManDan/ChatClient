@@ -127,10 +127,12 @@ public class ClientGUI extends JFrame implements ActionListener {
     //Update list of users
     void updateList(ArrayList<UserId> users) {
         userList.removeAll();
+        listModel.removeAllElements();
         allUsers = users;
-        for(int i=0; i<users.size(); i++){
-            listModel.addElement(users.get(i).getName());
+        for(int i=0; i<allUsers.size(); i++){
+            listModel.addElement(allUsers.get(i).getName());
         }
+        userList.updateUI();
     }
 
     // called by the GUI is the connection failed
