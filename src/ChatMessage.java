@@ -19,6 +19,7 @@ public class ChatMessage implements Serializable {
     
     private int type;
     private String message;
+    private int userID;
 
     // constructor
     ChatMessage(int type, String message) {
@@ -33,5 +34,15 @@ public class ChatMessage implements Serializable {
     
     String getMessage() {
         return message;
+    }
+
+    void setUserID(int userID)
+    {
+        this.userID = userID;
+    }
+
+    int getUserID()
+    {
+        return userID;
     }
 }
