@@ -71,8 +71,16 @@ public class ClientGUI extends JFrame implements ActionListener {
         northPanel.add(tf);
         add(northPanel, BorderLayout.NORTH);
 
+
+        //Create a new list model allowing for a dynamically modified list
         listModel = new DefaultListModel();
         userList = new JList(listModel);
+        //Allows user to select multiple users from the list
+        userList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        listModel.addElement("User List");
+        listModel.addElement("To update user list click the WHOISIN button");
+        listModel.addElement("To select multiple users hold down ctrl");
+
 
         JPanel activeUsers = new JPanel();
         activeUsers.add(new JScrollPane(userList));
