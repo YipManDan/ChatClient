@@ -21,6 +21,7 @@ public class ClientGUI extends JFrame implements ActionListener {
     private JTextField tf;
     // to hold the server address an the port number
     private JTextField tfServer, tfPort;
+    private JPanel activeUsers;
     // to Logout and get the list of the users
     private JButton login, logout, whoIsIn;
     // for the chat room
@@ -42,7 +43,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 
         // The NorthPanel with:
         JPanel northPanel = new JPanel(new GridLayout(3,1));
-        // the server name anmd the port number
+        // the server name and the port number
         JPanel serverAndPort = new JPanel(new GridLayout(1,5, 1, 3));
         // the two JTextField with default value for server address and port number
         tfServer = new JTextField(host);

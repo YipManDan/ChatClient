@@ -212,6 +212,7 @@ public class ChatClient {
         client.disconnect();
     }
 
+
     /*
      * a class that waits for the message from the server and append them to the JTextArea
      * if we have a GUI or simply System.out.println() it in console mode
@@ -221,14 +222,19 @@ public class ChatClient {
         public void run() {
             while(true) {
                 try {
-                    String msg = (String) sInput.readObject();
+                    //String msg = (String) sInput.readObject();
+                    ChatMessage cMsg = (ChatMessage) sInput.readObject();
                     // if console mode print the message and add back the prompt
+                    if(cMsg.getType() == ChatMessage.MESSAGE)
+                        display(cMsg.getMessage());
+                    /*
                     if(cg == null) {
                             System.out.println(msg);
                             System.out.print("> ");
                     } else {
                             cg.append(msg);
                     }
+                    */
                 }
                 catch(IOException e) {
                     display("Server has close the connection: " + e);
