@@ -7,6 +7,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 
 /*
@@ -35,6 +36,8 @@ public class ClientGUI extends JFrame implements ActionListener {
     // the default port number
     private int defaultPort;
     private String defaultHost;
+
+    ArrayList<UserId> allUsers;
 
     // Constructor connection receiving a socket number
     ClientGUI(String host, int port) {
@@ -112,6 +115,8 @@ public class ClientGUI extends JFrame implements ActionListener {
         setVisible(true);
         tf.requestFocus();
 
+        allUsers = new ArrayList<>();
+
     }
 
     // called by the Client to append text in the TextArea 
@@ -120,10 +125,11 @@ public class ClientGUI extends JFrame implements ActionListener {
         ta.setCaretPosition(ta.getText().length() - 1);
     }
     //Update list of users
-    void updateList(UserId[] users) {
+    void updateList(ArrayList<UserId> users) {
         userList.removeAll();
-        for(int i=0; i<users.length; i++){
-            listModel.addElement(users[i].getName());
+        allUsers = users;
+        for(int i=0; i<users.size(); i++){
+            listModel.addElement(users.get(i).getName());
         }
     }
 
