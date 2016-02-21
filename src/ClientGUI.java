@@ -22,6 +22,7 @@ public class ClientGUI extends JFrame implements ActionListener {
     // to hold the server address an the port number
     private JTextField tfServer, tfPort;
     private JList userList;
+    private DefaultListModel listModel;
     JButton chat;
     // to Logout and get the list of the users
     private JButton login, logout, whoIsIn;
@@ -67,8 +68,10 @@ public class ClientGUI extends JFrame implements ActionListener {
         northPanel.add(tf);
         add(northPanel, BorderLayout.NORTH);
 
+        listModel = new DefaultListModel();
+        userList = new JList(listModel);
+
         JPanel activeUsers = new JPanel();
-        userList = new JList();
         activeUsers.add(new JScrollPane(userList));
         JPanel userButtons = new JPanel(new GridLayout(1,3));
         userButtons.add(new JLabel(""));
@@ -116,6 +119,14 @@ public class ClientGUI extends JFrame implements ActionListener {
         ta.append(str);
         ta.setCaretPosition(ta.getText().length() - 1);
     }
+    //Update list of users
+    void updateList(UserId[] users) {
+        userList.removeAll();
+        for(int i=0; i<users.length; i++){
+            listModel.addElement(users[i].getName());
+        }
+    }
+
     // called by the GUI is the connection failed
     // we reset our buttons, label, textfield
     void connectionFailed() {
