@@ -21,7 +21,8 @@ public class ClientGUI extends JFrame implements ActionListener {
     private JTextField tf;
     // to hold the server address an the port number
     private JTextField tfServer, tfPort;
-    private JPanel activeUsers;
+    private JList userList;
+    JButton chat;
     // to Logout and get the list of the users
     private JButton login, logout, whoIsIn;
     // for the chat room
@@ -66,9 +67,22 @@ public class ClientGUI extends JFrame implements ActionListener {
         northPanel.add(tf);
         add(northPanel, BorderLayout.NORTH);
 
+        JPanel activeUsers = new JPanel();
+        userList = new JList();
+        activeUsers.add(new JScrollPane(userList));
+        JPanel userButtons = new JPanel(new GridLayout(1,3));
+        userButtons.add(new JLabel(""));
+        userButtons.add(new JLabel(""));
+        chat = new JButton("Chat");
+        chat.addActionListener(this);
+        userButtons.add(chat);
+        //activeUsers.add(userButtons, BorderLayout.SOUTH);
+
         // The CenterPanel which is the chat room
         ta = new JTextArea("Welcome to the Chat room\n", 80, 80);
-        JPanel centerPanel = new JPanel(new GridLayout(1,1));
+        JPanel centerPanel = new JPanel(new GridLayout(2,1));
+        //centerPanel.add(activeUsers);
+        centerPanel.add(new JScrollPane(userList));
         centerPanel.add(new JScrollPane(ta));
         ta.setEditable(false);
         add(centerPanel, BorderLayout.CENTER);
@@ -85,6 +99,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 
         JPanel southPanel = new JPanel();
         southPanel.add(login);
+        southPanel.add(chat);
         southPanel.add(logout);
         southPanel.add(whoIsIn);
         add(southPanel, BorderLayout.SOUTH);
@@ -127,6 +142,10 @@ public class ClientGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         // if it is the Logout button
+        if(o == chat) {
+            JFrame frame = new JFrame("Chat Window");
+            frame.setVisible(true);
+        }
         if(o == logout) {
             client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, ""));
             return;
