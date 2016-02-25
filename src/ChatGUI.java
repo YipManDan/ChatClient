@@ -128,19 +128,19 @@ public class ChatGUI extends JFrame implements ActionListener {
         Object o = e.getSource();
         // if it is the Logout button
         if(o == logout) {
-            client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, ""));
+            client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, "", client.getSelf()));
             return;
         }
         // if it the who is in button
         if(o == whoIsIn) {
-            client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, ""));				
+            client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, "", client.getSelf()));
             return;
         }
 
         // ok it is coming from the JTextField
         if(connected) {
             // just have to send the message
-            client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, tf.getText()));				
+            client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, tf.getText(), client.getSelf()));
             tf.setText("");
             return;
         }
