@@ -15,6 +15,8 @@ public class ChatClient {
 
     private ClientGUI cg;
 
+    private UserId self;
+
 
     // the server, the port and the username
     private String server, username;
@@ -105,6 +107,14 @@ public class ChatClient {
         } catch(IOException e) {
             display("Exception writing to server: " + e);
         }
+    }
+
+    void setSelf(UserId self) {
+        this.self = self;
+    }
+
+    UserId getSelf(){
+        return self;
     }
 
 
@@ -200,15 +210,15 @@ public class ChatClient {
             String msg = scan.nextLine();
             // logout if message is LOGOUT
             if(msg.equalsIgnoreCase("LOGOUT")) {
-                client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, ""));
+                client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, "", client.getSelf()));
                 // break to do the disconnect
                 break;
             } else if(msg.equalsIgnoreCase("WHOISIN")) {
                 // message WhoIsIn
-                client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, ""));				
+                client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, "", client.getSelf()));
             } else {
                 // default to ordinary message
-                client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, msg));
+                client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, msg, client.getSelf()));
             }
         }
         
@@ -231,7 +241,7 @@ public class ChatClient {
                     ChatMessage cMsg = (ChatMessage) sInput.readObject();
                     // if console mode print the message and add back the prompt
                     if(cMsg.getType() == ChatMessage.MESSAGE) {
-                        if(flag == 1) {
+                        if(flag != 1) {
                             flag = 0;
                             cg.updateList(users);
                         }
