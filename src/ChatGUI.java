@@ -28,12 +28,19 @@ public class ChatGUI extends JFrame implements ActionListener {
     private ArrayList<UserId> users;
 
     // Constructor connection receiving a socket number
-    ChatGUI(ArrayList users, ClientGUI cg) {
+    ChatGUI(ArrayList<UserId> users, ClientGUI cg) {
 
         super("Chat Box");
 
         this.users = users;
         this.cg = cg;
+
+        String title = new String();
+        for(int i = 0; i < users.size(); i++) {
+            UserId user = users.get(i);
+            title.concat(user.getName());
+        }
+        this.setTitle(title);
 
         // The NorthPanel with:
         JPanel northPanel = new JPanel(new GridLayout(3,1));
