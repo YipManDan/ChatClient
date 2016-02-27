@@ -22,18 +22,18 @@ public class ChatGUI extends JFrame implements ActionListener {
     // for the chat room
     private JTextArea ta;
     // if it is for connection
-    private boolean connected;
     // the Client object
-    private ChatClient client;
+    ClientGUI cg;
 
     private ArrayList<UserId> users;
 
     // Constructor connection receiving a socket number
-    ChatGUI(ArrayList users) {
+    ChatGUI(ArrayList users, ClientGUI cg) {
 
         super("Chat Box");
 
         this.users = users;
+        this.cg = cg;
 
         // The NorthPanel with:
         JPanel northPanel = new JPanel(new GridLayout(3,1));
@@ -57,9 +57,10 @@ public class ChatGUI extends JFrame implements ActionListener {
         JPanel southPanel = new JPanel();
         add(southPanel, BorderLayout.SOUTH);
 
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(600, 600);
         setVisible(true);
+        tf.addActionListener(this);
         tf.requestFocus();
 
     }
@@ -97,19 +98,10 @@ public class ChatGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
 
-        // ok it is coming from the JTextField
-        if(connected) {
-            // just have to send the message
-            client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, tf.getText(), client.getSelf()));
-            tf.setText("");
-            return;
-        }
+        // just have to send the message
+        cg.sendMessage(users, tf.getText());
+        tf.setText("");
+        return;
     }
-
-    // to start the whole thing the server
-    public static void main(String[] args) {
-        new ChatGUI(null);
-    }
-
 }
 
