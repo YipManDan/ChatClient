@@ -82,15 +82,6 @@ public class ClientGUI extends JFrame implements ActionListener {
         listModel.addElement("To select multiple users hold down ctrl");
 
 
-        JPanel activeUsers = new JPanel();
-        activeUsers.add(new JScrollPane(userList));
-        JPanel userButtons = new JPanel(new GridLayout(1,3));
-        userButtons.add(new JLabel(""));
-        userButtons.add(new JLabel(""));
-        chat = new JButton("Chat");
-        chat.addActionListener(this);
-        userButtons.add(chat);
-        //activeUsers.add(userButtons, BorderLayout.SOUTH);
 
         // The CenterPanel which is the chat room
         ta = new JTextArea("Welcome to the Chat room\n", 80, 80);
@@ -104,6 +95,9 @@ public class ClientGUI extends JFrame implements ActionListener {
         // the 3 buttons
         login = new JButton("Login");
         login.addActionListener(this);
+        chat = new JButton("Chat");
+        chat.addActionListener(this);
+        chat.setEnabled(false);
         logout = new JButton("Logout");
         logout.addActionListener(this);
         logout.setEnabled(false);		// you have to login before being able to logout
@@ -139,13 +133,15 @@ public class ClientGUI extends JFrame implements ActionListener {
     //Update list of users
     void updateList(ArrayList<UserId> users) {
         System.out.println("Updating the list...");
-        userList.removeAll();
         listModel.removeAllElements();
         allUsers = users;
         for(int i=0; i<allUsers.size(); i++){
+            System.out.println("Adding to GUI List: " + allUsers.get(i).getName());
             listModel.addElement(allUsers.get(i).getName());
         }
-        userList.updateUI();
+        for(int i= 0; i < listModel.size(); i++)
+            System.out.println(listModel.get(i));
+        userList.repaint();
     }
 
     // called by the GUI is the connection failed
