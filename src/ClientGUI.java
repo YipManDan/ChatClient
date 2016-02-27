@@ -226,6 +226,7 @@ public class ClientGUI extends JFrame implements ActionListener {
             tf.setText("");
             label.setText("Enter your message below");
             connected = true;
+            this.setTitle(username);
 
             // disable login button
             login.setEnabled(false);
