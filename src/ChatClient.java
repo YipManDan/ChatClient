@@ -241,7 +241,8 @@ public class ChatClient {
                     ChatMessage cMsg = (ChatMessage) sInput.readObject();
                     // if console mode print the message and add back the prompt
                     if(cMsg.getType() == ChatMessage.MESSAGE) {
-                        if(flag != 1) {
+                        System.out.println("Received a MESSAGE");
+                        if(flag == 1) {
                             flag = 0;
                             cg.updateList(users);
                         }
@@ -252,7 +253,9 @@ public class ChatClient {
                         if(flag == 0)
                             users.clear();
                         flag = 1;
-                        users.add(new UserId(cMsg.getUserID(), cMsg.getMessage()));
+                        System.out.println("Received a WHOISIN");
+                        if(!cMsg.isYou)
+                            users.add(new UserId(cMsg.getUserID(), cMsg.getMessage()));
                     }
                     /*
                     if(cg == null) {
