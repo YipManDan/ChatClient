@@ -25,7 +25,7 @@ public class ChatMessage implements Serializable {
     UserId sender;
     Boolean isYou;  //Allows server to tell client it's own UserId
 
-    // constructor
+    // constructor for a simple message to server
     ChatMessage(int type, String message, UserId sender) {
         this.type = type;
         this.message = message;
@@ -33,6 +33,7 @@ public class ChatMessage implements Serializable {
         this.sender = sender;
         this.isYou = false;
     }
+    //constructor for sending user information
     ChatMessage(int type, String message, UserId sender, Boolean isYou) {
         this.type = type;
         this.message = message;
@@ -40,6 +41,7 @@ public class ChatMessage implements Serializable {
         this.sender = sender;
         this.isYou = isYou;
     }
+    //constructor for sending directed messages
     ChatMessage(int type, String message, ArrayList<UserId> recipients, UserId sender) {
         this.type = type;
         this.message = message;
