@@ -127,6 +127,10 @@ public class ClientGUI extends JFrame implements ActionListener {
 
     }
 
+    void sendMessage(ArrayList users, String message) {
+        client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, message, users, client.getSelf()));
+    }
+
     // called by the Client to append text in the TextArea 
     void append(String str) {
         ta.append(str);
@@ -134,6 +138,7 @@ public class ClientGUI extends JFrame implements ActionListener {
     }
     //Update list of users
     void updateList(ArrayList<UserId> users) {
+        System.out.println("Updating the list...");
         userList.removeAll();
         listModel.removeAllElements();
         allUsers = users;
@@ -170,8 +175,20 @@ public class ClientGUI extends JFrame implements ActionListener {
         Object o = e.getSource();
         // if it is the Logout button
         if(o == chat) {
-            JFrame frame = new JFrame("Chat Window");
-            frame.setVisible(true);
+            int[] selected = userList.getSelectedIndices();
+            ArrayList<UserId> selectedUsers = new ArrayList<>();
+            for(int i=0; i < selected.length; i++)
+                selectedUsers.add(allUsers.get(selected[i]));
+            if(selectedUsers.size() == 0) {
+                JOptionPane.showMessageDialog(new JFrame()
+                        , "No users selected.\nPlease select one or more users."
+                        , "Chat Room Error"
+                        , JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                ChatGUI frame = new ChatGUI(selectedUsers, this);
+                frame.setVisible(true);
+            }
         }
         if(o == logout) {
             client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, "", client.getSelf()));
