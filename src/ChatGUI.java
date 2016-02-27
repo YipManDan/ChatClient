@@ -8,7 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /*
@@ -21,8 +23,10 @@ public class ChatGUI extends JFrame implements ActionListener {
     private JTextField tf;
     // for the chat room
     private JTextArea ta;
-    // if it is for connection
-    // the Client object
+
+    private SimpleDateFormat sdf;
+
+    // the Client object (The calling class)
     ClientGUI cg;
 
     private ArrayList<UserId> users;
@@ -35,10 +39,12 @@ public class ChatGUI extends JFrame implements ActionListener {
         this.users = users;
         this.cg = cg;
 
+        sdf = new SimpleDateFormat("HH:mm:ss");
+
         String title = new String();
         for(int i = 0; i < users.size(); i++) {
             UserId user = users.get(i);
-            title.concat(user.getName());
+            title = title + user.getName() + " ";
         }
         this.setTitle(title);
 
@@ -104,9 +110,11 @@ public class ChatGUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
+        String time = sdf.format(new Date());
 
         // just have to send the message
         cg.sendMessage(users, tf.getText());
+        append(time + ": " + "You: " + tf.getText());
         tf.setText("");
         return;
     }
