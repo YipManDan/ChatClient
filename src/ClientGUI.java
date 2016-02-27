@@ -127,7 +127,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 
     }
 
-    void sendMessage(ArrayList users, String message) {
+    void sendMessage(ArrayList<UserId> users, String message) {
         client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, message, users, client.getSelf()));
     }
 
@@ -189,6 +189,7 @@ public class ClientGUI extends JFrame implements ActionListener {
                 ChatGUI frame = new ChatGUI(selectedUsers, this);
                 frame.setVisible(true);
             }
+            return;
         }
         if(o == logout) {
             client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, "", client.getSelf()));
