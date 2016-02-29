@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +18,7 @@ import java.util.Date;
 /*
  * The Client with its GUI
  */
-public class ChatGUI extends JFrame implements ActionListener {
+public class ChatGUI extends JFrame implements ActionListener, WindowListener{
 
     private static final long serialVersionUID = 1L;
     //Text field for user to enter message
@@ -38,6 +40,8 @@ public class ChatGUI extends JFrame implements ActionListener {
 
         this.users = users;
         this.cg = cg;
+
+        //Runtime.getRuntime().addShutdownHook(new ClosingSequence(cg, this));
 
         sdf = new SimpleDateFormat("HH:mm:ss");
 
@@ -76,6 +80,8 @@ public class ChatGUI extends JFrame implements ActionListener {
         tf.addActionListener(this);
         tf.requestFocus();
 
+        addWindowListener(this);
+
     }
 
     // called by the Client to append text in the TextArea 
@@ -83,30 +89,12 @@ public class ChatGUI extends JFrame implements ActionListener {
         ta.append(str);
         ta.setCaretPosition(ta.getText().length() - 1);
     }
-    /*
-    // called by the GUI is the connection failed
-    // we reset our buttons, label, textfield
-    void connectionFailed() {
-        login.setEnabled(true);
-        logout.setEnabled(false);
-        whoIsIn.setEnabled(false);
-        label.setText("Enter your username below");
-        tf.setText("Anonymous");
-        // reset port number and host name as a construction time
-        tfPort.setText("" + defaultPort);
-        tfServer.setText(defaultHost);
-        // let the user change them
-        tfServer.setEditable(false);
-        tfPort.setEditable(false);
-        // don't react to a <CR> after the username
-        tf.removeActionListener(this);
-        connected = false;
-    }
-    */
 
-    /*
-    * Button or JTextField clicked
-    */
+    ArrayList<UserId> getUsers() {
+        return users;
+    }
+
+    //JtextField is modified
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
@@ -118,5 +106,34 @@ public class ChatGUI extends JFrame implements ActionListener {
         tf.setText("");
         return;
     }
+    @Override
+    public void windowClosing(WindowEvent e) {
+        System.out.println("Closing Sequence");
+        cg.closeChat(this);
+    }
+
+    public void windowClosed(WindowEvent e) {}
+    public void windowOpened(WindowEvent e) {}
+    public void windowIconified(WindowEvent e) {}
+    public void windowDeiconified(WindowEvent e){}
+    public void windowActivated(WindowEvent e) {}
+    public void windowDeactivated(WindowEvent e) {}
+    /*
+    //Closing sequence which will remove ChatGUI from Client's list
+    static class ClosingSequence extends Thread {
+        ClientGUI cg;
+        ChatGUI room;
+        ClosingSequence(ClientGUI cg, ChatGUI room) {
+            this.cg = cg;
+            this.room = room;
+
+        }
+        public void run() {
+            //TODO: Remove
+            System.out.println("Closing Sequence");
+            cg.closeChat(room);
+        }
+    }
+    */
 }
 
