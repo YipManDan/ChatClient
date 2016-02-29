@@ -45,7 +45,7 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
 
         sdf = new SimpleDateFormat("HH:mm:ss");
 
-        String title = new String();
+        String title = new String(cg.getTitle() + ">");
         for(int i = 0; i < users.size(); i++) {
             UserId user = users.get(i);
             title = title + user.getName() + " ";
