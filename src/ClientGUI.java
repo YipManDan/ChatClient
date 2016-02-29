@@ -18,26 +18,30 @@ public class ClientGUI extends JFrame implements ActionListener {
     private static final long serialVersionUID = 1L;
     // will first hold "Username:", later on "Enter message"
     private JLabel label;
-    // to hold the Username and later on the messages
+    // JTextField to hold the Username and later on the messages
     private JTextField tf;
-    // to hold the server address an the port number
+    // to hold the server address and the port number
     private JTextField tfServer, tfPort;
+    //GUI list to display logged in users (minus this user)
     private JList userList;
     private DefaultListModel listModel;
-    JButton chat;
-    // to Logout and get the list of the users
-    private JButton login, logout, whoIsIn;
+    //Buttons for logging in, chatting, logging out, and finding out active users
+    private JButton login, chat, logout, whoIsIn;
     // for the chat room
     private JTextArea ta;
     // if it is for connection
     private boolean connected;
     // the Client object
     private ChatClient client;
-    // the default port number
+    // the default port number and the default Hostname
     private int defaultPort;
     private String defaultHost;
 
+    //Arraylist of all active users
     ArrayList<UserId> allUsers;
+    //ArrayList of all active chat windows
+    ArrayList<ChatGUI> allChats;
+
 
     // Constructor connection receiving a socket number
     ClientGUI(String host, int port) {
@@ -45,6 +49,8 @@ public class ClientGUI extends JFrame implements ActionListener {
         super("Chat Client");
         defaultPort = port;
         defaultHost = host;
+
+        allChats = new ArrayList<>();
 
         // The NorthPanel with:
         JPanel northPanel = new JPanel(new GridLayout(3,1));
@@ -126,8 +132,58 @@ public class ClientGUI extends JFrame implements ActionListener {
     }
 
     // called by the Client to append text in the TextArea 
-    void append(String str) {
-        ta.append(str);
+    void append(ChatMessage cMsg) {
+        ta.append(cMsg.getMessage() + "\n");
+        ta.setCaretPosition(ta.getText().length() - 1);
+        //TODO: Only works with WHOISIN, server messages MAYBE manage list better?
+        /*
+        if(cMsg.getRecipients().size()==0){
+            System.out.println("Message from server");
+            return;
+        }
+        */
+        if(cMsg.getSender().getId() == 0) {
+            System.out.println("Message from server");
+            return;
+        }
+        //Check if recipients of the message have an open window
+        for(int i = 0; i< allChats.size(); i++) {
+            ArrayList<UserId> users = allChats.get(i).getUsers();
+            //if(users.equals(cMsg.getRecipients()));
+            if(users.size() == cMsg.getRecipients().size()
+                    && users.containsAll(cMsg.getRecipients())
+                    && cMsg.getRecipients().containsAll(users)) {
+                System.out.println("The ChatWindow is already open!!");
+                allChats.get(i).append(cMsg.getMessage());
+                return;
+            }
+        }
+        /*
+        //Loop through all open chatWindows
+        for(int i = 0; i< allChats.size(); i++) {
+            ArrayList<UserId> users = allChats.get(i).getUsers();
+            //Loop through all users in an open chatWindow
+            int count = 0;
+            for(int j = 0; j < users.size(); j++){
+                UserId user = users.get(j);
+                //Loop through all recipients
+                for(int k = 0; k < cMsg.getRecipients().size(); k++) {
+                    UserId user2  = cMsg.getRecipients().get(k);
+                    if(user.getId() == user2.getId()) {
+                        count++;
+                        break;
+                    }
+                }
+            }
+            if (count == users.size());
+        }
+        */
+        ChatGUI frame = openWindow(cMsg.getRecipients());
+        frame.append(cMsg.getMessage());
+
+    }
+    void append(String s) {
+        ta.append(s + "\n");
         ta.setCaretPosition(ta.getText().length() - 1);
     }
     //Update list of users
@@ -144,10 +200,25 @@ public class ClientGUI extends JFrame implements ActionListener {
         userList.repaint();
     }
 
+    ChatGUI openWindow(ArrayList<UserId> selectedUsers){
+        ChatGUI frame = new ChatGUI(selectedUsers, this);
+        frame.setVisible(true);
+        allChats.add(frame);
+        return frame;
+    }
+
+    //Remove ChatWindow from list when ChatGUI is closed
+    void closeChat(ChatGUI room) {
+        System.out.println("Removing ChatGUI from list");
+        allChats.remove(room);
+
+    }
+
     // called by the GUI is the connection failed
     // we reset our buttons, label, textfield
     void connectionFailed() {
         login.setEnabled(true);
+        chat.setEnabled(false);
         logout.setEnabled(false);
         whoIsIn.setEnabled(false);
         label.setText("Enter your username below");
@@ -182,8 +253,7 @@ public class ClientGUI extends JFrame implements ActionListener {
                         , JOptionPane.ERROR_MESSAGE);
             }
             else {
-                ChatGUI frame = new ChatGUI(selectedUsers, this);
-                frame.setVisible(true);
+                openWindow(selectedUsers);
             }
             return;
         }
@@ -244,7 +314,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 
             // disable login button
             login.setEnabled(false);
-            // enable the 2 buttons
+            // enable the 3 buttons
+            chat.setEnabled(true);
             logout.setEnabled(true);
             whoIsIn.setEnabled(true);
             // disable the Server and Port JTextField
