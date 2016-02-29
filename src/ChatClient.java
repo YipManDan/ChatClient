@@ -91,17 +91,27 @@ public class ChatClient {
     /*
      * To send a message to the console or the GUI
      */
-    private void display(String msg) {
+    private void display(ChatMessage cMsg) {
         if(cg == null)
-            System.out.println(msg); // println in console mode
+            System.out.println(cMsg.getMessage()); // println in console mode
         else
-            cg.append(msg + "\n"); // append to the ClientGUI JTextArea (or whatever)
+            cg.append(cMsg); // append to the ClientGUI JTextArea (or whatever)
+    }
+    private void display(String s) {
+        if(cg == null)
+            System.out.println(s); // println in console mode
+        else
+            cg.append(s); // append to the ClientGUI JTextArea (or whatever)
+
     }
 	
     /*
      * To send a message to the server
      */
     void sendMessage(ChatMessage msg) {
+        System.out.println("Sending: " + msg.getMessage());
+        if(msg.getSender() != null)
+            System.out.println("Sender info: " + msg.getSender().getName() + " " + msg.getSender().getId());
         try {
             sOutput.writeObject(msg);
         } catch(IOException e) {
@@ -237,25 +247,35 @@ public class ChatClient {
         public void run() {
             while(true) {
                 try {
-                    //String msg = (String) sInput.readObject();
                     ChatMessage cMsg = (ChatMessage) sInput.readObject();
                     // if console mode print the message and add back the prompt
                     if(cMsg.getType() == ChatMessage.MESSAGE) {
                         System.out.println("Received a MESSAGE");
                         if(flag == 1) {
                             flag = 0;
+                            for(int i = 0; i < users.size(); i++)
+                                System.out.println(users.get(i).getName());
                             cg.updateList(users);
                         }
-                        display(cMsg.getMessage());
+                        display(cMsg);
                     }
                     else if(cMsg.getType() == ChatMessage.WHOISIN)
                     {
-                        if(flag == 0)
+                        if(flag == 0) {
+                            System.out.println("Clear userlist in Client");
                             users.clear();
+                        }
                         flag = 1;
                         System.out.println("Received a WHOISIN");
-                        if(!cMsg.isYou)
+                        if(!cMsg.isYou) {
+                            System.out.println("Added to userlist");
                             users.add(new UserId(cMsg.getUserID(), cMsg.getMessage()));
+                        }
+                        else {
+                            setSelf(new UserId(cMsg.getUserID(), cMsg.getMessage()));
+                        }
+                        for(int i = 0; i < users.size(); i++)
+                            System.out.println(users.get(i).getName());
                     }
                     /*
                     if(cg == null) {
