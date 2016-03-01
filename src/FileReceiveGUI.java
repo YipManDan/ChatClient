@@ -13,14 +13,16 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
 
     int transferId;
     ClientGUI cg;
+    ChatMessage cMsg;
 
     final JFileChooser fc = new JFileChooser();
 
-    FileReceiveGUI(ClientGUI cg){
+    FileReceiveGUI(ClientGUI cg, ChatMessage cMsg){
 
         super("New File Transfer Request");
 
         this.cg = cg;
+        this.cMsg = cMsg;
 
         accept = new JButton("Accept");
         accept.addActionListener(this);
@@ -33,6 +35,8 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
         Object o = e.getSource();
         if (o == accept) {
             int returnVal = fc.showSaveDialog(this);
+            if(returnVal == JFileChooser.APPROVE_OPTION)
+                return;
             return;
         }
         if (o == deny) {
@@ -62,6 +66,6 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
     public void windowDeactivated(WindowEvent e) {}
 
     public static void main(String[] args) {
-        FileReceiveGUI window = new FileReceiveGUI(null);
+        FileReceiveGUI window = new FileReceiveGUI(null, new ChatMessage(ChatMessage.FILE, ChatMessage.FILESEND, 03, new UserId(3, "SomePerson")));
     }
 }
