@@ -102,7 +102,7 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
 
         // just have to send the message
         cg.sendMessage(users, tf.getText());
-        append(time + ": " + "You: " + tf.getText());
+        append(time + ": " + "You: " + tf.getText() + "\n");
         tf.setText("");
         return;
     }
