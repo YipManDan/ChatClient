@@ -25,6 +25,8 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
     private JTextField tf;
     // for the chat room
     private JTextArea ta;
+    //For file sending
+    private JButton file;
 
     private SimpleDateFormat sdf;
 
@@ -69,9 +71,11 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
         ta.setEditable(false);
         add(centerPanel, BorderLayout.CENTER);
 
-        // the 3 buttons
 
         JPanel southPanel = new JPanel();
+        file = new JButton("Send File");
+        file.addActionListener(this);
+        southPanel.add(file);
         add(southPanel, BorderLayout.SOUTH);
 
         //setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -99,6 +103,11 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         String time = sdf.format(new Date());
+
+        if(o == file) {
+            FileSendGUI fileWindow = new FileSendGUI(this);
+            return;
+        }
 
         // just have to send the message
         cg.sendMessage(users, tf.getText());
