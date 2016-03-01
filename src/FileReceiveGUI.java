@@ -11,15 +11,16 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
 
     JButton accept, deny;
 
+    int transferId;
+    ClientGUI cg;
 
-    ChatClient client;
     final JFileChooser fc = new JFileChooser();
 
-    FileReceiveGUI(ChatClient client){
+    FileReceiveGUI(ClientGUI cg){
 
         super("New File Transfer Request");
 
-        this.client = client;
+        this.cg = cg;
 
         accept = new JButton("Accept");
         accept.addActionListener(this);
@@ -42,8 +43,10 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
     }
     private void sendDeny(){
         //Send a deny message to the server
+        cg.denyFileTransfer(transferId);
 
     }
+
 
     @Override
     public void windowClosing(WindowEvent e) {
