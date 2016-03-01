@@ -86,7 +86,7 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
 
     // called by the Client to append text in the TextArea 
     void append(String str) {
-        ta.append(str);
+        ta.append(str + "\n");
         ta.setCaretPosition(ta.getText().length() - 1);
     }
 
@@ -102,7 +102,7 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
 
         // just have to send the message
         cg.sendMessage(users, tf.getText());
-        append(time + ": " + "You: " + tf.getText() + "\n");
+        append(time + ": " + "You: " + tf.getText());
         tf.setText("");
         return;
     }
