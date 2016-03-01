@@ -159,7 +159,7 @@ public class ClientGUI extends JFrame implements ActionListener {
             }
         }
         /*
-        //Loop through all open chatWindows
+        //Loop through all open chatWindowsV
         for(int i = 0; i< allChats.size(); i++) {
             ArrayList<UserId> users = allChats.get(i).getUsers();
             //Loop through all users in an open chatWindow
@@ -213,6 +213,11 @@ public class ClientGUI extends JFrame implements ActionListener {
         allChats.remove(room);
 
     }
+
+    void denyFileTransfer(int transferId) {
+
+    }
+
 
     // called by the GUI is the connection failed
     // we reset our buttons, label, textfield
