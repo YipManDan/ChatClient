@@ -277,6 +277,9 @@ public class ChatClient {
                         for(int i = 0; i < users.size(); i++)
                             System.out.println(users.get(i).getName());
                     }
+                    else if(cMsg.getType() == ChatMessage.FILE) {
+                        FileReceiveGUI fileWindow = new FileReceiveGUI(cg, cMsg);
+                    }
                     /*
                     if(cg == null) {
                             System.out.println(msg);
