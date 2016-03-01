@@ -308,7 +308,7 @@ public class ClientGUI extends JFrame implements ActionListener {
                 return;
             
             tf.setText("");
-            label.setText("Enter your message below");
+            label.setText("Enter your broadcast message below");
             connected = true;
             this.setTitle(username);
 
