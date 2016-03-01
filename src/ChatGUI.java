@@ -86,6 +86,8 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
 
         addWindowListener(this);
 
+        this.setLocationRelativeTo(null);
+
     }
 
     // called by the Client to append text in the TextArea 
