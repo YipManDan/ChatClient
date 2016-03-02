@@ -62,8 +62,11 @@ public class FileSendGUI extends JFrame implements ActionListener{
 
     private void writeFile(){
         parent.fileNotification(fc.getSelectedFile().length());
+        System.out.println("fileNotification sent");
         tf.setText(fc.getSelectedFile().getAbsolutePath());
         File myFile = fc.getSelectedFile();
+        if(myFile == null)
+            return;
         byte [] mybytearray = new byte[(int)myFile.length()];
         parent.append("Sending File: " + fc.getSelectedFile().getName());
         try {
@@ -104,11 +107,13 @@ public class FileSendGUI extends JFrame implements ActionListener{
             int returnVal = fc.showOpenDialog(this);
             if(returnVal == JFileChooser.CANCEL_OPTION)
                 return;
-            writeFile();
+            tf.setText(fc.getSelectedFile().getAbsolutePath());
             return;
         }
         if(o == send) {
-           return;
+            writeFile();
+            this.dispose();
+            return;
         }
 
 
