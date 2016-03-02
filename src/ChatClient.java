@@ -119,6 +119,10 @@ public class ChatClient {
         }
     }
 
+    Socket getSocket() {
+        return socket;
+    }
+
     void setSelf(UserId self) {
         this.self = self;
     }
