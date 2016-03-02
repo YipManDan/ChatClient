@@ -7,6 +7,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.Socket;
 import java.util.ArrayList;
 
 
@@ -214,8 +215,18 @@ public class ClientGUI extends JFrame implements ActionListener {
 
     }
 
-    void denyFileTransfer(int transferId) {
+    void fileTransferStart(long length, ArrayList<UserId> recipients){
+        client.sendMessage(new ChatMessage(ChatMessage.FILE, ChatMessage.FILESEND, length, recipients, client.getSelf()));
+    }
 
+    //Send file deny message to server
+    void denyFileTransfer(int transferId) {
+        client.sendMessage(new ChatMessage(ChatMessage.FILE, ChatMessage.FILEDENY, transferId, 0, "", client.getSelf()));
+
+    }
+
+    Socket getSocket(){
+        return client.getSocket();
     }
 
 
