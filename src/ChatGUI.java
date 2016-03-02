@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -105,9 +106,19 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
         return cg.getSocket();
     }
 
-    void fileNotification(long length){
-        cg.fileTransferStart(length, users);
+    void sendNull(){
+        cg.sendNull();
     }
+
+    ObjectOutputStream getOOS(){
+        return cg.getOOS();
+    }
+
+    void fileNotification(long length, String filename){
+        cg.fileTransferStart(length, filename, users);
+    }
+
+
 
     //JtextField is modified
     @Override
