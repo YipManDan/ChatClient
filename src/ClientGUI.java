@@ -7,6 +7,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -132,6 +133,11 @@ public class ClientGUI extends JFrame implements ActionListener {
         client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, message, users, client.getSelf()));
     }
 
+    void sendNull(){
+        client.sendMessage(new ChatMessage(10, "", client.getSelf()));
+    }
+
+
     // called by the Client to append text in the TextArea 
     void append(ChatMessage cMsg) {
         ta.append(cMsg.getMessage() + "\n");
@@ -215,8 +221,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 
     }
 
-    void fileTransferStart(long length, ArrayList<UserId> recipients){
-        client.sendMessage(new ChatMessage(ChatMessage.FILE, ChatMessage.FILESEND, length, recipients, client.getSelf()));
+    void fileTransferStart(long length, String filename, ArrayList<UserId> recipients){
+        client.sendMessage(new ChatMessage(ChatMessage.FILE, ChatMessage.FILESEND, length, filename, recipients, client.getSelf()));
     }
 
     //Send file deny message to server
@@ -227,6 +233,10 @@ public class ClientGUI extends JFrame implements ActionListener {
 
     Socket getSocket(){
         return client.getSocket();
+    }
+
+    ObjectOutputStream getOOS(){
+        return client.getOOS();
     }
 
 
