@@ -22,6 +22,7 @@ public class ChatMessage implements Serializable {
     private int type;
     private int fileStatus;
     private int transferId;
+    private long fileSize;
     private String message;
     private int userID;
     ArrayList<UserId> recipients;
@@ -37,14 +38,23 @@ public class ChatMessage implements Serializable {
         this.isYou = false;
     }
     //constructor for file messaging
-    ChatMessage(int type, int fileStatus, int transferId, UserId sender){
+    ChatMessage(int type, int fileStatus, int transferId, long fileSize, String message, UserId sender){
         this.type = type;
         this.fileStatus = fileStatus;
         this.transferId = transferId;
-        this.message = "";
+        this.fileSize = fileSize;
+        this.message = message;
         recipients = new ArrayList<>();
         this.sender = sender;
         this.isYou = false;
+    }
+    //constructor for file transfer initializing
+    ChatMessage(int type, int fileStatus, long fileSize, ArrayList<UserId> recipients, UserId sender) {
+        this.type = type;
+        this.fileStatus = fileStatus;
+        this.fileSize = fileSize;
+        this.recipients = recipients;
+        this.sender = sender;
     }
     //constructor for sending user information
     ChatMessage(int type, String message, UserId sender, Boolean isYou) {
@@ -76,6 +86,9 @@ public class ChatMessage implements Serializable {
         return transferId;
     }
 
+    long getFileSize() {
+        return fileSize;
+    }
     Boolean getIsYou(){
         return isYou;
     }
