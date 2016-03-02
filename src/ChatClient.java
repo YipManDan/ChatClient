@@ -123,6 +123,10 @@ public class ChatClient {
         return socket;
     }
 
+    ObjectOutputStream getOOS(){
+        return sOutput;
+    }
+
     void setSelf(UserId self) {
         this.self = self;
     }
@@ -271,7 +275,7 @@ public class ChatClient {
                         }
                         flag = 1;
                         System.out.println("Received a WHOISIN");
-                        if(!cMsg.isYou) {
+                        if(!cMsg.getIsYou()) {
                             System.out.println("Added to userlist");
                             users.add(new UserId(cMsg.getUserID(), cMsg.getMessage()));
                         }
