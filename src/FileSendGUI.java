@@ -20,20 +20,23 @@ public class FileSendGUI extends JFrame implements ActionListener{
     //GUI File chooser
     final JFileChooser fc = new JFileChooser();
 
-    Socket socket;
+    //Socket socket;
     FileInputStream fis;
     BufferedInputStream bis;
-    OutputStream os;
+    //OutputStream os;
+    ObjectOutputStream oos;
 
     FileSendGUI(ChatGUI parent) {
 
         super("Select a File to Send");
         this.parent = parent;
 
-        socket = parent.getSocket();
+        //socket = parent.getSocket();
+        oos = parent.getOOS();
 
         JPanel north, south;
 
+        //North panel contains text field displaying selected file path
         north = new JPanel(new GridLayout(1,1));
         tf = new JTextField();
         tf.setText("Select a file:");
@@ -42,6 +45,7 @@ public class FileSendGUI extends JFrame implements ActionListener{
         north.add(tf);
 
 
+        //South panel contains select and send button
         south = new JPanel();
         select = new JButton("Select File");
         select.addActionListener(this);
@@ -60,8 +64,9 @@ public class FileSendGUI extends JFrame implements ActionListener{
         this.setVisible(true);
     }
 
+    //Function to handle writing file to output stream
     private void writeFile(){
-        parent.fileNotification(fc.getSelectedFile().length());
+        parent.fileNotification(fc.getSelectedFile().length(), fc.getSelectedFile().getName());
         System.out.println("fileNotification sent");
         tf.setText(fc.getSelectedFile().getAbsolutePath());
         File myFile = fc.getSelectedFile();
@@ -73,9 +78,12 @@ public class FileSendGUI extends JFrame implements ActionListener{
             fis = new FileInputStream(myFile);
             bis = new BufferedInputStream(fis);
             bis.read(mybytearray, 0, mybytearray.length);
+            /*
             os = socket.getOutputStream();
             os.write(mybytearray, 0, mybytearray.length);
             os.flush();
+            */
+            oos.writeObject(mybytearray);
             parent.append("File Sent");
         }
         catch (IOException e1) {
@@ -89,6 +97,7 @@ public class FileSendGUI extends JFrame implements ActionListener{
                 catch (IOException e2){
                 }
             }
+            /*
             if(os != null) {
                 try {
                     os.close();
@@ -96,7 +105,9 @@ public class FileSendGUI extends JFrame implements ActionListener{
                 catch (IOException e3){
                 }
             }
+            */
         }
+        parent.sendNull();
 
     }
 
