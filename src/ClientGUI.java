@@ -231,6 +231,11 @@ public class ClientGUI extends JFrame implements ActionListener {
 
     }
 
+    //Send file accept message to server
+    void acceptFileTransfer(int transferId) {
+        client.sendMessage(new ChatMessage(ChatMessage.FILE, ChatMessage.FILEACCEPT, transferId, 0, "", client.getSelf() ));
+    }
+
     Socket getSocket(){
         return client.getSocket();
     }
@@ -239,6 +244,10 @@ public class ClientGUI extends JFrame implements ActionListener {
         return client.getOOS();
     }
 
+
+    void removeTransferRequest(FileReceiveGUI ended) {
+        client.removeTransferRequest(ended);
+    }
 
     // called by the GUI is the connection failed
     // we reset our buttons, label, textfield

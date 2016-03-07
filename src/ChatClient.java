@@ -17,6 +17,8 @@ public class ChatClient {
 
     private UserId self;
 
+    ArrayList<FileReceiveGUI> transferRequests = new ArrayList<>();
+
 
     // the server, the port and the username
     private String server, username;
@@ -133,6 +135,10 @@ public class ChatClient {
 
     UserId getSelf(){
         return self;
+    }
+
+    void removeTransferRequest(FileReceiveGUI ended) {
+        transferRequests.remove(ended);
     }
 
 
@@ -286,7 +292,30 @@ public class ChatClient {
                             System.out.println(users.get(i).getName());
                     }
                     else if(cMsg.getType() == ChatMessage.FILE) {
-                        FileReceiveGUI fileWindow = new FileReceiveGUI(cg, cMsg);
+                        System.out.println("Received a Chat Message of type: File");
+                        if(cMsg.getFileStatus() == ChatMessage.FILESEND) {
+                            System.out.println("Received a filesend request");
+                            FileReceiveGUI fileWindow = new FileReceiveGUI(cg, cMsg, sInput);
+                            transferRequests.add(fileWindow);
+                        }
+                        else if(cMsg.getFileStatus() == ChatMessage.FILEACCEPT) {
+                            System.out.println("Receiving a file!");
+                            for(int i = 0; i < transferRequests.size(); i++){
+                                if(cMsg.getTransferId() == transferRequests.get(i).getTransferId()) {
+                                    transferRequests.get(i).beginTransfer(cMsg);
+                                    break;
+                                }
+                            }
+                            try{
+                                sInput.readObject();
+                            }
+                            catch (ClassNotFoundException e){
+                            }
+                            catch (IOException e){
+
+                            }
+
+                        }
                     }
                     /*
                     if(cg == null) {

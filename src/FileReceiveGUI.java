@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
+import java.io.*;
 
 /**
  * Created by Daniel on 2/29/2016.
@@ -17,23 +17,31 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
     JLabel fileInfo;
 
     int transferId;
+    long length;
     ClientGUI cg;
     ChatMessage cMsg;
+
+    ObjectInputStream ois;
+    FileOutputStream fos;
+    BufferedOutputStream bos;
 
     final JFileChooser fc = new JFileChooser();
 
     //Constructor
-    FileReceiveGUI(ClientGUI cg, ChatMessage cMsg){
+    FileReceiveGUI(ClientGUI cg, ChatMessage cMsg, ObjectInputStream ois){
 
         super("New File Transfer Request");
 
         this.cg = cg;
         this.cMsg = cMsg;
         this.transferId = cMsg.getTransferId();
+        this.ois = ois;
+
+        this.length = cMsg.getFileSize();
 
         JPanel north, south;
 
-        fileInfo = new JLabel("<html>You've received a file transfer request from user: <br>"
+        fileInfo = new JLabel("<html>You've received a file transfer(" + transferId + ")  request from user: <br>"
                 + cMsg.getSender().getId()
                 + " "
                 + cMsg.getSender().getName()
@@ -78,6 +86,8 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
                         + "<br>Saving as: " + fc.getSelectedFile() + "</html>");
                 //resize JFrame if label too large
                 this.pack();
+                deny.setEnabled(false);
+                cg.acceptFileTransfer(transferId);
                 return;
             }
             return;
@@ -85,6 +95,7 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
         //if user hits deny button
         if (o == deny) {
             sendDeny();
+            cg.removeTransferRequest(this);
             this.dispose();
             return;
         }
@@ -96,6 +107,70 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
         System.out.println("Closing Sequence");
         //Send a deny message to the server
         cg.denyFileTransfer(transferId);
+    }
+
+    private void sendAccept(){
+    }
+
+    void beginTransfer(ChatMessage cMsg){
+        System.out.println("Beginning file transfer...");
+        getFile();
+    }
+
+    void getFile(){
+        //This should accept the file into a temporary file
+        cg.append("Starting file transfer to server\n");
+        try {
+            byte [] mybytearray = new byte [((int) length)];
+            System.out.println("Size of byte array: " + mybytearray.length);
+            //is = socket.getInputStream();
+            fos = new FileOutputStream(fc.getSelectedFile());
+            bos = new BufferedOutputStream(fos);
+            try{
+                mybytearray = (byte []) ois.readObject();
+            }
+            catch (ClassNotFoundException e){
+                cg.append("In reading file object:" + e.getMessage());
+            }
+            //bytesRead = is.read(mybytearray, 0, mybytearray.length);
+            //current = 0;
+            //int current = bytesRead;
+            int current = (int)length;
+            /*
+            do {
+                bytesRead = is.read(mybytearray, current, (mybytearray.length-current));
+                if(bytesRead >= 0)
+                    current += bytesRead;
+                server.event("File progress: " + current + " of " + length);
+            } while (current < length);
+            //} while (is.available() > 0);
+            */
+
+
+            bos.write(mybytearray, 0, current);
+            bos.flush();
+
+        }
+        catch (IOException e){
+            cg.append("Error in receiving file" + e.getMessage() + "\n");
+        }
+        finally {
+            try {
+                if (fos != null)
+                    fos.close();
+                if(bos != null)
+                    bos.close();
+            }
+            catch (IOException e){
+                cg.append("Error closing file streams" + e.getMessage());
+            }
+        }
+        cg.append("Obtained file: " + fc.getSelectedFile().getAbsolutePath());
+
+    }
+
+    int getTransferId(){
+        return transferId;
     }
 
 
@@ -111,10 +186,4 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
     public void windowActivated(WindowEvent e) {}
     public void windowDeactivated(WindowEvent e) {}
 
-    //Main method for testing
-    public static void main(String[] args) {
-        FileReceiveGUI window = new FileReceiveGUI(null,
-                new ChatMessage(ChatMessage.FILE, ChatMessage.FILESEND, 03, 6023451
-                        , "Filename!", new UserId(3, "SomePerson")));
-    }
 }
