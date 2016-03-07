@@ -234,15 +234,15 @@ public class ChatClient {
             String msg = scan.nextLine();
             // logout if message is LOGOUT
             if(msg.equalsIgnoreCase("LOGOUT")) {
-                client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, "", client.getSelf()));
+                client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, "", client.getSelf(), new Date()));
                 // break to do the disconnect
                 break;
             } else if(msg.equalsIgnoreCase("WHOISIN")) {
                 // message WhoIsIn
-                client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, "", client.getSelf()));
+                client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, "", client.getSelf(), new Date()));
             } else {
                 // default to ordinary message
-                client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, msg, client.getSelf()));
+                client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, msg, client.getSelf(), new Date()));
             }
         }
         

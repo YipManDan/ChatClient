@@ -7,6 +7,7 @@
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChatMessage implements Serializable {
 
@@ -25,16 +26,18 @@ public class ChatMessage implements Serializable {
     private long fileSize;
     private String message;
     private int userID;
+    private Date timestamp;
     private ArrayList<UserId> recipients;
     private UserId sender;
     private Boolean isYou;  //Allows server to tell client it's own UserId
 
     // constructor for a simple message to server
-    ChatMessage(int type, String message, UserId sender) {
+    ChatMessage(int type, String message, UserId sender, Date timestamp) {
         this.type = type;
         this.message = message;
         recipients = new ArrayList<>();
         this.sender = sender;
+        this.timestamp = timestamp;
         this.isYou = false;
     }
     //constructor for file messaging
@@ -66,11 +69,12 @@ public class ChatMessage implements Serializable {
         this.isYou = isYou;
     }
     //constructor for sending directed messages
-    ChatMessage(int type, String message, ArrayList<UserId> recipients, UserId sender) {
+    ChatMessage(int type, String message, ArrayList<UserId> recipients, UserId sender, Date timestamp) {
         this.type = type;
         this.message = message;
         this.recipients = recipients;
         this.sender = sender;
+        this.timestamp = timestamp;
         this.isYou = false;
     }
 

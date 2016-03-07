@@ -10,6 +10,7 @@ import java.awt.event.*;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /*
@@ -130,11 +131,11 @@ public class ClientGUI extends JFrame implements ActionListener {
     }
 
     void sendMessage(ArrayList<UserId> users, String message) {
-        client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, message, users, client.getSelf()));
+        client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, message, users, client.getSelf(), new Date()));
     }
 
     void sendNull(){
-        client.sendMessage(new ChatMessage(10, "", client.getSelf()));
+        client.sendMessage(new ChatMessage(10, "", client.getSelf(), new Date()));
     }
 
 
@@ -205,6 +206,7 @@ public class ClientGUI extends JFrame implements ActionListener {
         for(int i= 0; i < listModel.size(); i++)
             System.out.println(listModel.get(i));
         userList.repaint();
+        userList.setVisible(true);
     }
 
     ChatGUI openWindow(ArrayList<UserId> selectedUsers){
@@ -293,19 +295,18 @@ public class ClientGUI extends JFrame implements ActionListener {
             return;
         }
         if(o == logout) {
-            client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, "", client.getSelf()));
+            client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, "", client.getSelf(), new Date()));
             return;
         }
         // if it the who is in button
         if(o == whoIsIn) {
-            client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, "", client.getSelf()));
+            client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, "", client.getSelf(), new Date()));
             return;
         }
 
-        // ok it is coming from the JTextField
+        //a broadcast message
         if(connected) {
-            // just have to send the message
-            client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, tf.getText(), client.getSelf()));
+            client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, tf.getText(), client.getSelf(), new Date()));
             tf.setText("");
             return;
         }
