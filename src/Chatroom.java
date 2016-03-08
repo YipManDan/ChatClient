@@ -1,6 +1,8 @@
 import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 /**
  * Created by Daniel on 3/7/2016.
@@ -11,6 +13,7 @@ public class Chatroom {
     ClientGUI cg;
     ChatGUI chatGUI;
     Boolean isOpen;
+    private SimpleDateFormat sdf;
 
     //Constructor
     Chatroom(ArrayList<UserId> users, ArrayList<Message> messages, ClientGUI cg) {
@@ -19,8 +22,13 @@ public class Chatroom {
         if(messages == null)
             this.messages = new ArrayList<>();
         this.cg = cg;
+        sdf = new SimpleDateFormat("HH:mm:ss");
+
+
         isOpen = false;
         openGUI();
+
+
     }
 
     void openGUI(){
@@ -38,8 +46,16 @@ public class Chatroom {
         Message m = new Message(cMsg.getSender(), cMsg.getTimestamp(), cMsg.getMessage());
         messages.add(m);
         Collections.sort(messages);
+
+        String time = sdf.format(m.getTimestamp());
+        String username;
+        if(cMsg.getSender().equals(cg.getSelf()))
+            username = "You";
+        else
+            username = cMsg.getSender().getName();
+
         if(isOpen)
-            chatGUI.append(cMsg.getMessage());
+            chatGUI.append(time + ": " + username + ": " + cMsg.getMessage());
         else
             openGUI();
     }
