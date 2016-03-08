@@ -141,6 +141,15 @@ public class ChatClient {
         transferRequests.remove(ended);
     }
 
+    void sendHistory(UserHistory history){
+        try {
+            sOutput.writeObject(history);
+        }
+        catch (IOException e){
+            System.out.println("Error sending history: " + e.getMessage());
+        }
+    }
+
 
     /*
      * When something goes wrong
@@ -241,6 +250,18 @@ public class ChatClient {
         ArrayList<UserId> users = new ArrayList<>();
         @Override
         public void run() {
+            UserHistory history;
+            try {
+                history = (UserHistory) sInput.readObject();
+                cg.saveHistory(history);
+            }
+            catch(IOException e) {
+                display("Trouble reading history: " + e);
+                if(cg != null)
+                    cg.connectionFailed();
+            } catch(ClassNotFoundException e) {
+            }
+
             while(true) {
                 try {
                     ChatMessage cMsg = (ChatMessage) sInput.readObject();

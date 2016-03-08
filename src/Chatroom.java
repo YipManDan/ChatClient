@@ -26,12 +26,9 @@ public class Chatroom {
 
 
         isOpen = false;
-        openGUI();
-
-
     }
 
-    void openGUI(){
+    public void openGUI(){
         isOpen = true;
         this.chatGUI = new ChatGUI(users, messages, cg, this);
         chatGUI.setLocationRelativeTo(cg);

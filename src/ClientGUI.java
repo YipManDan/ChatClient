@@ -132,6 +132,24 @@ public class ClientGUI extends JFrame implements ActionListener {
 
     }
 
+    void saveHistory(UserHistory history){
+        append("Saving history. Size: " + history.getChatrooms().size());
+
+        /*
+        for(Chatroom cr: allRooms) {
+            history.newChatroom(cr.getUsers(), cr.messages);
+        }
+        */
+        allRooms = new ArrayList<>();
+        ArrayList<UserHistory.Chat> chats = history.getChatrooms();
+        for(UserHistory.Chat chat: chats){
+            allRooms.add(new Chatroom(chat.recipients, chat.messages, this));
+           append(chat.recipients.get(0).getName());
+        }
+
+
+    }
+
     void sendMessage(ArrayList<UserId> users, String message) {
         client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, message, users, client.getSelf(), new Date()));
     }
@@ -216,9 +234,21 @@ public class ClientGUI extends JFrame implements ActionListener {
         allChats.add(frame);
         return frame;
         */
+        for(int i = 0; i< allRooms.size(); i++) {
+            ArrayList<UserId> users = allRooms.get(i).getUsers();
+            //if(users.equals(cMsg.getRecipients()));
+            if(users.size() == selectedUsers.size()
+                    && users.containsAll(selectedUsers)
+                    && selectedUsers.containsAll(users)) {
+                System.out.println("The ChatWindow is already open!!");
+                allRooms.get(i).openGUI();
+                return allRooms.get(i);
+            }
+        }
 
         Chatroom room = new Chatroom(selectedUsers, null, this);
         allRooms.add(room);
+        room.openGUI();
         return room;
     }
 
@@ -307,7 +337,15 @@ public class ClientGUI extends JFrame implements ActionListener {
             return;
         }
         if(o == logout) {
+            UserHistory history = new UserHistory(client.getSelf().getName());
+            for(int i = 0; i< allRooms.size(); i++) {
+                ArrayList<UserId> users = allRooms.get(i).getUsers();
+                history.newChatroom(users, allRooms.get(i).messages);
+                System.out.println("Saving a chatroom");
+            }
+            System.out.println("Sending history from: " + history.getUsername() + " of size: " + history.getChatrooms().size());
             client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, "", client.getSelf(), new Date()));
+            client.sendHistory(history);
             return;
         }
         // if it the who is in button

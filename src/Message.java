@@ -1,11 +1,11 @@
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
 
 /**
  * Created by Daniel on 3/7/2016.
  */
-public class Message implements Comparator<Message>, Comparable<Message>{
+public class Message implements Comparator<Message>, Comparable<Message>, Serializable{
     private UserId sender;
     private Date timestamp;
     private String message;
