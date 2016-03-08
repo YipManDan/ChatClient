@@ -108,8 +108,16 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
 
     //TODO: add user and timestamp to append
     void appendMessages(ArrayList<Message> messages) {
+        String time;
+        String username;
         for(int i = 0; i < messages.size(); i++) {
-            append(messages.get(i).getMessage());
+            Message m = messages.get(i);
+            time = sdf.format(m.getTimestamp());
+            if(m.getSender().equals(cg.getSelf()))
+                username = "You";
+            else
+                username = m.getSender().getName();
+            append(time + ": " + username + ": " + m.getMessage());
         }
     }
 
@@ -150,7 +158,7 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
 
         // just have to send the message
         cr.sendMessage(users, tf.getText());
-        append(time + ": " + "You: " + tf.getText());
+        //append(time + ": " + "You: " + tf.getText());
         tf.setText("");
         return;
     }
