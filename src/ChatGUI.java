@@ -35,21 +35,26 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
     // the Client object (The calling class)
     ClientGUI cg;
 
+    Chatroom cr;
+
+    private ArrayList<Message> messages;
+
     private ArrayList<UserId> users;
 
     // Constructor connection receiving a socket number
-    ChatGUI(ArrayList<UserId> users, ClientGUI cg) {
+    ChatGUI(ArrayList<UserId> users, ArrayList<Message> messages, ClientGUI cg, Chatroom cr) {
 
         super("Chat Box");
 
         this.users = users;
         this.cg = cg;
+        this.cr = cr;
 
         //Runtime.getRuntime().addShutdownHook(new ClosingSequence(cg, this));
 
         sdf = new SimpleDateFormat("HH:mm:ss");
 
-        String title = new String(cg.getTitle() + ">");
+        String title = new String(cr.getTitle() + ">");
         for(int i = 0; i < users.size(); i++) {
             UserId user = users.get(i);
             title = title + user.getName() + " ";
@@ -88,7 +93,10 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
 
         addWindowListener(this);
 
-        this.setLocationRelativeTo(cg);
+        if(messages.size() != 0)
+            appendMessages(messages);
+
+        //this.setLocationRelativeTo(cg);
 
     }
 
@@ -98,24 +106,33 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
         ta.setCaretPosition(ta.getText().length() - 1);
     }
 
+    //TODO: add user and timestamp to append
+    void appendMessages(ArrayList<Message> messages) {
+        for(int i = 0; i < messages.size(); i++) {
+            append(messages.get(i).getMessage());
+        }
+    }
+
     ArrayList<UserId> getUsers() {
         return users;
     }
 
+    /*
     Socket getSocket(){
         return cg.getSocket();
     }
+    */
 
     void sendNull(){
-        cg.sendNull();
+        cr.sendNull();
     }
 
     ObjectOutputStream getOOS(){
-        return cg.getOOS();
+        return cr.getOOS();
     }
 
     void fileNotification(long length, String filename){
-        cg.fileTransferStart(length, filename, users);
+        cr.fileTransferStart(length, filename, users);
     }
 
 
@@ -132,7 +149,7 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
         }
 
         // just have to send the message
-        cg.sendMessage(users, tf.getText());
+        cr.sendMessage(users, tf.getText());
         append(time + ": " + "You: " + tf.getText());
         tf.setText("");
         return;
@@ -140,7 +157,7 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
     @Override
     public void windowClosing(WindowEvent e) {
         System.out.println("Closing Sequence");
-        cg.closeChat(this);
+        cr.closeChat(this);
     }
 
     public void windowClosed(WindowEvent e) {}

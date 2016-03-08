@@ -43,7 +43,8 @@ public class ClientGUI extends JFrame implements ActionListener {
     //Arraylist of all active users
     ArrayList<UserId> allUsers;
     //ArrayList of all active chat windows
-    ArrayList<ChatGUI> allChats;
+    //ArrayList<ChatGUI> allChats;
+    ArrayList<Chatroom> allRooms;
 
 
     // Constructor connection receiving a socket number
@@ -53,7 +54,8 @@ public class ClientGUI extends JFrame implements ActionListener {
         defaultPort = port;
         defaultHost = host;
 
-        allChats = new ArrayList<>();
+        //allChats = new ArrayList<>();
+        allRooms = new ArrayList<>();
 
         // The NorthPanel with:
         JPanel northPanel = new JPanel(new GridLayout(3,1));
@@ -154,6 +156,7 @@ public class ClientGUI extends JFrame implements ActionListener {
             System.out.println("Message from server");
             return;
         }
+        /*
         //Check if recipients of the message have an open window
         for(int i = 0; i< allChats.size(); i++) {
             ArrayList<UserId> users = allChats.get(i).getUsers();
@@ -166,28 +169,25 @@ public class ClientGUI extends JFrame implements ActionListener {
                 return;
             }
         }
-        /*
-        //Loop through all open chatWindowsV
-        for(int i = 0; i< allChats.size(); i++) {
-            ArrayList<UserId> users = allChats.get(i).getUsers();
-            //Loop through all users in an open chatWindow
-            int count = 0;
-            for(int j = 0; j < users.size(); j++){
-                UserId user = users.get(j);
-                //Loop through all recipients
-                for(int k = 0; k < cMsg.getRecipients().size(); k++) {
-                    UserId user2  = cMsg.getRecipients().get(k);
-                    if(user.getId() == user2.getId()) {
-                        count++;
-                        break;
-                    }
-                }
-            }
-            if (count == users.size());
-        }
         */
+        for(int i = 0; i< allRooms.size(); i++) {
+            ArrayList<UserId> users = allRooms.get(i).getUsers();
+            //if(users.equals(cMsg.getRecipients()));
+            if(users.size() == cMsg.getRecipients().size()
+                    && users.containsAll(cMsg.getRecipients())
+                    && cMsg.getRecipients().containsAll(users)) {
+                System.out.println("The ChatWindow is already open!!");
+                allRooms.get(i).newMessage(cMsg);
+                return;
+            }
+        }
+        Chatroom cr = openWindow(cMsg.getRecipients());
+        cr.newMessage(cMsg);
+
+        /*
         ChatGUI frame = openWindow(cMsg.getRecipients());
         frame.append(cMsg.getMessage());
+        */
 
     }
     void append(String s) {
@@ -209,19 +209,27 @@ public class ClientGUI extends JFrame implements ActionListener {
         userList.setVisible(true);
     }
 
-    ChatGUI openWindow(ArrayList<UserId> selectedUsers){
-        ChatGUI frame = new ChatGUI(selectedUsers, this);
+    Chatroom openWindow(ArrayList<UserId> selectedUsers){
+        /*
+        ChatGUI frame = new ChatGUI(selectedUsers, null, this);
         frame.setVisible(true);
         allChats.add(frame);
         return frame;
+        */
+
+        Chatroom room = new Chatroom(selectedUsers, null, this);
+        allRooms.add(room);
+        return room;
     }
 
+    /*
     //Remove ChatWindow from list when ChatGUI is closed
     void closeChat(ChatGUI room) {
         System.out.println("Removing ChatGUI from list");
         allChats.remove(room);
 
     }
+    */
 
     void fileTransferStart(long length, String filename, ArrayList<UserId> recipients){
         client.sendMessage(new ChatMessage(ChatMessage.FILE, ChatMessage.FILESEND, length, filename, recipients, client.getSelf()));
