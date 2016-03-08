@@ -149,7 +149,6 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
 
             bos.write(mybytearray, 0, current);
             bos.flush();
-
         }
         catch (IOException e){
             cg.append("Error in receiving file" + e.getMessage() + "\n");
@@ -166,6 +165,7 @@ public class FileReceiveGUI extends JFrame implements ActionListener, WindowList
             }
         }
         cg.append("Obtained file: " + fc.getSelectedFile().getAbsolutePath());
+        this.dispose();
 
     }
 

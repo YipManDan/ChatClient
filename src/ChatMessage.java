@@ -119,4 +119,8 @@ public class ChatMessage implements Serializable {
     UserId getSender() {
         return sender;
     }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
 }

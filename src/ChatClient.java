@@ -271,7 +271,8 @@ public class ChatClient {
                                 System.out.println(users.get(i).getName());
                             cg.updateList(users);
                         }
-                        display(cMsg);
+                        else
+                            display(cMsg);
                     }
                     else if(cMsg.getType() == ChatMessage.WHOISIN)
                     {

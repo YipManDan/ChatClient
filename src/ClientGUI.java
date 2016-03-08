@@ -254,6 +254,10 @@ public class ClientGUI extends JFrame implements ActionListener {
         return client.getOOS();
     }
 
+    UserId getSelf(){
+        return client.getSelf();
+    }
+
 
     void removeTransferRequest(FileReceiveGUI ended) {
         client.removeTransferRequest(ended);
