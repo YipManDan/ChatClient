@@ -165,25 +165,7 @@ public class ChatClient {
 
     }
 
-    /*
-     * To start the Client in console mode use one of the following command
-     * > java Client
-     * > java Client username
-     * > java Client username portNumber
-     * > java Client username portNumber serverAddress
-     * at the console prompt
-     * If the portNumber is not specified 1500 is used
-     * If the serverAddress is not specified "localHost" is used
-     * If the username is not specified "Anonymous" is used
-     * > java Client 
-     * is equivalent to
-     * > java Client Anonymous 1500 localhost 
-     * are eqquivalent
-     * 
-     * In console mode, if an error occurs the program simply stops
-     * when a GUI id used, the GUI is informed of the disconnection
-     */
-        
+
     public static void main(String[] args) {
         // default values
         int portNumber = 1500;
@@ -317,6 +299,10 @@ public class ChatClient {
                             }
 
                         }
+                    }
+                    else if(cMsg.getType() == ChatMessage.LOGOUT){
+                        JOptionPane.showMessageDialog(cg, cMsg.getMessage());
+                        disconnect();
                     }
                     /*
                     if(cg == null) {
