@@ -67,7 +67,6 @@ public class FileSendGUI extends JFrame implements ActionListener{
     //Function to handle writing file to output stream
     private void writeFile(){
         parent.fileNotification(fc.getSelectedFile().length(), fc.getSelectedFile().getName());
-        System.out.println("fileNotification sent");
         tf.setText(fc.getSelectedFile().getAbsolutePath());
         File myFile = fc.getSelectedFile();
         if(myFile == null)

@@ -29,7 +29,7 @@ public class ClientGUI extends JFrame implements ActionListener {
     private JList userList;
     private DefaultListModel listModel;
     //Buttons for logging in, chatting, logging out, and finding out active users
-    private JButton login, chat, logout, whoIsIn;
+    private JButton login, chat, logout, whoIsIn, crash;
     // for the chat room
     private JTextArea ta;
     // if it is for connection
@@ -115,16 +115,19 @@ public class ClientGUI extends JFrame implements ActionListener {
         whoIsIn = new JButton("Who is in");
         whoIsIn.addActionListener(this);
         whoIsIn.setEnabled(false);		// you have to login before being able to Who is in
+        crash = new JButton("Crash");
+        crash.addActionListener(this);
 
         JPanel southPanel = new JPanel();
         southPanel.add(login);
         southPanel.add(chat);
         southPanel.add(logout);
         southPanel.add(whoIsIn);
+        //southPanel.add(crash);
         add(southPanel, BorderLayout.SOUTH);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 600);
+        setSize(350, 500);
         setVisible(true);
         tf.requestFocus();
 
@@ -174,20 +177,7 @@ public class ClientGUI extends JFrame implements ActionListener {
             System.out.println("Message from server");
             return;
         }
-        /*
-        //Check if recipients of the message have an open window
-        for(int i = 0; i< allChats.size(); i++) {
-            ArrayList<UserId> users = allChats.get(i).getUsers();
-            //if(users.equals(cMsg.getRecipients()));
-            if(users.size() == cMsg.getRecipients().size()
-                    && users.containsAll(cMsg.getRecipients())
-                    && cMsg.getRecipients().containsAll(users)) {
-                System.out.println("The ChatWindow is already open!!");
-                allChats.get(i).append(cMsg.getMessage());
-                return;
-            }
-        }
-        */
+
         for(int i = 0; i< allRooms.size(); i++) {
             ArrayList<UserId> users = allRooms.get(i).getUsers();
             //if(users.equals(cMsg.getRecipients()));
@@ -352,6 +342,10 @@ public class ClientGUI extends JFrame implements ActionListener {
         if(o == whoIsIn) {
             client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, "", client.getSelf(), new Date()));
             return;
+        }
+
+        if(o == crash) {
+            client.crash();
         }
 
         //a broadcast message

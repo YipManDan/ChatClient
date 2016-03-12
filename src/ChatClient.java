@@ -150,6 +150,9 @@ public class ChatClient {
         }
     }
 
+    public void crash(){
+    }
+
 
     /*
      * When something goes wrong

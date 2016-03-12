@@ -86,7 +86,7 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
         add(southPanel, BorderLayout.SOUTH);
 
         //setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 600);
+        setSize(350, 450);
         setVisible(true);
         tf.addActionListener(this);
         tf.requestFocus();
@@ -155,7 +155,6 @@ public class ChatGUI extends JFrame implements ActionListener, WindowListener{
             FileSendGUI fileWindow = new FileSendGUI(this);
             return;
         }
-
         // just have to send the message
         cr.sendMessage(users, tf.getText());
         //append(time + ": " + "You: " + tf.getText());
